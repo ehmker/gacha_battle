@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "gacha",
+            "username": "gacha_admin",
+            "password": "H#p6keUvFpr01ROa268pcFZyip#Gx9",
+            "database": "gacha_database"
+        }
+    ]
+}

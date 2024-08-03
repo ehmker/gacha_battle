@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: gacha_db
+    environment:
+      POSTGRES_USER: gacha_admin
+      POSTGRES_PASSWORD: H#p6keUvFpr01ROa268pcFZyip#Gx9
+      POSTGRES_DB: gacha_database
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db_data:
