@@ -9,15 +9,20 @@ class Creature:
     ):
         self.name = name
         self.dice = die_list_dict
-        self.health = None
+        self.max_hp = None
+        self.cur_hp = None
         self.is_alive = None
         self._last_dmg_taken = None
 
-    def __str__(self):
-        return f"""### {self.name}
-    :game_dice: HP: {self.health}
-    ATK: {self.attack}
-    DEF: {self.health}"""
+    def __repr__(self):
+        out_string = f"## {self.name}\n### Dice:\n"
+        for die_type, die_dict in self.dice.items():
+            d_string = f"{die_type}: "
+            for die, count in die_dict.items():
+                d_string += f"{count}{die} + "
+            d_string = d_string.rstrip(" +")
+            out_string += d_string + "\n"
+        return out_string
 
     def attack(self, target):
         dmg_to_target = self._roll_dice("ATK")
@@ -28,14 +33,17 @@ class Creature:
 
     def _apply_dmg(self, dmg):
         self._last_dmg_taken = dmg
-        self.health -= dmg
-        if self.health <= 0:
+        self.cur_hp -= dmg
+        if self.cur_hp <= 0:
             self.is_alive = False
 
-    def set_HP(self):
-        self.health = self._roll_dice("HP")
+    def initialize_HP(self):
+        hp_roll = self._roll_dice("HP")
+        self.max_hp = hp_roll
+        self.cur_hp = hp_roll
         self.is_alive = True
-        print(f"{self.name} has {self.health} HP")
+
+        # print(f"{self.name} has {self.health} HP")
 
     def _roll_dice(self, category):
         total = 0
@@ -57,10 +65,3 @@ class Creature:
                 return random.randint(1, 12)
             case "d20":
                 return random.randint(1, 20)
-
-
-def Generate_New_Creature():
-    hp_bonus = random.randint(0, 50)
-    atk_bonus = random.randint(0, 10)
-    def_bonus = random.randint(0, 10)
-    return Creature(hp_bonus, atk_bonus, def_bonus)

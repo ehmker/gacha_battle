@@ -2,12 +2,17 @@
 import discord
 import os
 import psycopg
+import actions
 from discord.ext import commands
 from dotenv import load_dotenv
 from database import Database
-from creatures import creature
+from creature import Creature
 import yaml
 
+test_creature = Creature(
+    "TEST_CREATURE",
+    {"HP": {"d20": 3}, "ATK": {"d20": 1}, "END": {"d6": 1}, "REC": {"d20": 1}},
+)
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -40,7 +45,7 @@ async def on_member_join(member):
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send("Pong!")
+    await actions.dungeon_run(test_creature, ctx)
 
 
 @bot.command()
