@@ -169,6 +169,7 @@ auto_restart.py
 #for library obj stucture ref
 notes/
 
-
+.vscode/
+playground.*
 
 
