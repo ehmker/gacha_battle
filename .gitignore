@@ -171,5 +171,7 @@ notes/
 
 .vscode/
 playground.*
+start.sh
+test.sh
 
 

@@ -12,7 +12,6 @@ class Creature:
         self.max_hp = None
         self.cur_hp = None
         self.is_alive = None
-        self._last_dmg_taken = None
 
     def __repr__(self):
         out_string = f"## {self.name}\n### Dice:\n"
@@ -24,13 +23,18 @@ class Creature:
             out_string += d_string + "\n"
         return out_string
 
-    def attack(self, target):
-        dmg_to_target = self._roll_dice("ATK")
-        dmg_from_target = target._roll_dice("ATK")
+    # # rolls the attack die of the player and the target
+    # # applies the damage roll to each entity
+    # def attack(self, target) -> tuple:
+    #     dmg_to_target = self.roll_dice("ATK")
+    #     dmg_from_target = target._roll_dice("ATK")
 
-        self._apply_dmg(dmg_from_target)
-        target._apply_dmg(dmg_to_target)
+    #     self._apply_dmg(dmg_from_target)
+    #     target._apply_dmg(dmg_to_target)
 
+    #     return (dmg_to_target, dmg_from_target)
+
+    # applies the damage roll to the entity and updates is_alive attribute if necessary
     def _apply_dmg(self, dmg):
         self._last_dmg_taken = dmg
         self.cur_hp -= dmg
@@ -38,20 +42,25 @@ class Creature:
             self.is_alive = False
 
     def initialize_HP(self):
-        hp_roll = self._roll_dice("HP")
+        """
+        Max HP of entity for a run is determined by the HP dice roll
+        """
+        hp_roll = self.roll_dice("HP")
         self.max_hp = hp_roll
         self.cur_hp = hp_roll
         self.is_alive = True
 
-        # print(f"{self.name} has {self.health} HP")
-
-    def _roll_dice(self, category):
+    # Method to roll entity's dice of the given category
+    def roll_dice(self, category):
         total = 0
         for die in self.dice[category]:
             total += self._roll(die)
         return total
 
     def _roll(self, d):
+        """
+        Method to handle each dice class
+        """
         match d:
             case "d4":
                 return random.randint(1, 4)
@@ -65,3 +74,16 @@ class Creature:
                 return random.randint(1, 12)
             case "d20":
                 return random.randint(1, 20)
+
+    # Processes the recovery check and returns results of the roll as a tuple
+    # (END_check_roll, REC_amount_roll)
+    # REC_amount_roll = None if END_check is not successful
+    def recover(self) -> int:
+        if not self.is_alive:
+            return None
+        recover_amt = self.roll_dice("REC")
+        if recover_amt + self.cur_hp > self.max_hp:
+            self.cur_hp = self.max_hp
+        else:
+            self.cur_hp += recover_amt
+        return recover_amt
